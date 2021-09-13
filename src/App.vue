@@ -1,40 +1,59 @@
 <template>
-  <button @click="openModal" class="open_modalBtn">Open Modal</button>
-  <div v-if="showModal">
-    <Modal :header="header" :text="text" :theme="theme" />
-  </div>
+  <h1 class="title">Reaction Timer</h1>
+  <button class="playBtn" @click="play" :disabled="isPlaying">play</button>
+  <Block v-if="isPlaying" :delay="delay" @end="endGame" />
+  <Results v-if="showResults" :score="score" />
 </template>
 
 <script>
-import Modal from "./components/Modal.vue";
+import Block from "./components/Block";
+import Results from "./components/Results";
 
 export default {
   name: "App",
-  components: { Modal },
+  components: {
+    Block,
+    Results,
+  },
   data() {
     return {
-      title: "My first Vue App",
-      header: "Signup",
-      text: "Doesn't have an Account",
-      theme: "default",
-      showModal: false,
+      isPlaying: false,
+      delay: null,
+      score: null,
+      showResults: false,
     };
   },
   methods: {
-    openModal() {
-      this.showModal = true;
+    play() {
+      this.delay = 2000 + Math.random() * 5000;
+      this.isPlaying = true;
+      this.showResults = false;
+    },
+    endGame(time) {
+      this.score = time;
+      this.isPlaying = false;
+      this.showResults = true;
     },
   },
 };
 </script>
 
 <style>
-.open_modalBtn {
-  background: rosybrown;
-  color: #fff;
-  font-size: 16px;
-  padding: 12px 18px;
+.title {
+  margin-bottom: 18px;
+}
+.playBtn {
+  background: #2c3e50;
+  color: #ccc;
+  padding: 8px 12px;
+  font-size: 17px;
   border-radius: 8px;
   border: none;
+  cursor: pointer;
+  margin-bottom: 25px;
+}
+.playBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>
